@@ -6,7 +6,14 @@
  */
 
 import { isUserLoggedIn } from '@/lib/authUtils';
-import { showAuthPopup } from '@/lib/authPopup';
+
+/**
+ * Helper function to show auth popup via event
+ */
+function showAuthPopupEvent() {
+  const event = new CustomEvent('showAuthPopup');
+  window.dispatchEvent(event);
+}
 
 /**
  * Wrap any action that requires authentication
@@ -30,8 +37,8 @@ import { showAuthPopup } from '@/lib/authPopup';
 export async function protectedAction(action, message = 'Please sign in first to continue.') {
   // Check if user is logged in
   if (!isUserLoggedIn()) {
-    // Show popup
-    showAuthPopup();
+    // Show popup via event
+    showAuthPopupEvent();
     
     // Show message in console (optional)
     console.warn('Action blocked:', message);
@@ -66,7 +73,7 @@ export async function protectedAction(action, message = 'Please sign in first to
 export function requireAuth(fn, message = 'Please sign in first to continue.') {
   return async function(...args) {
     if (!isUserLoggedIn()) {
-      showAuthPopup();
+      showAuthPopupEvent();
       console.warn('Action blocked:', message);
       return false;
     }
@@ -91,7 +98,7 @@ export function protectElementClick(element, action, message = 'Please sign in f
     e.preventDefault();
     
     if (!isUserLoggedIn()) {
-      showAuthPopup();
+      showAuthPopupEvent();
       console.warn('Action blocked:', message);
       return false;
     }

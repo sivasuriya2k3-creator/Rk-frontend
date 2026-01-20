@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import { ProtectedRoute, AdminRoute } from "@/components/ProtectedRoute";
+import AuthPopupModal from "./components/AuthPopupModal";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
@@ -34,16 +35,34 @@ import ApplyForPosition from "./pages/ApplyForPosition";
 import EmployeeDetailsPage from "./pages/EmployeeDetailsPage";
 import ChatBot from "./components/ChatBot";
 import ChatbotDashboard from "./pages/ChatbotDashboard";
+import { useState, useEffect } from "react";
 
 const queryClient = new QueryClient();
 
-const App = () => (
+const App = () => {
+  const [authPopupOpen, setAuthPopupOpen] = useState(false);
+
+  useEffect(() => {
+    // Listen for auth popup events
+    const handleShowAuthPopup = () => {
+      setAuthPopupOpen(true);
+    };
+
+    window.addEventListener('showAuthPopup', handleShowAuthPopup);
+    return () => window.removeEventListener('showAuthPopup', handleShowAuthPopup);
+  }, []);
+
+  return (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider defaultTheme="dark" storageKey="rajkayal-theme-v2">
       <AuthProvider>
         <TooltipProvider>
           <Toaster />
           <Sonner />
+          <AuthPopupModal 
+            isOpen={authPopupOpen} 
+            onClose={() => setAuthPopupOpen(false)}
+          />
           <BrowserRouter>
             <Routes>
               {/* Public Routes - No Login Required */}
@@ -114,6 +133,7 @@ const App = () => (
       </AuthProvider>
     </ThemeProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 export default App;
