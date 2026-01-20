@@ -56,16 +56,16 @@ const AuthPopupModal: React.FC<AuthPopupModalProps> = ({
       onKeyDown={handleKeyDown}
       role="presentation"
     >
-      <div className="bg-card rounded-2xl shadow-2xl max-w-sm w-full border border-border/40 backdrop-blur-sm animate-in fade-in zoom-in-95 duration-300">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-accent via-accent/90 to-primary/20 text-accent-foreground p-6 flex justify-between items-center rounded-t-2xl">
+      <div className="bg-black rounded-2xl shadow-2xl max-w-sm w-full border border-amber-500/30 backdrop-blur-sm animate-in fade-in zoom-in-95 duration-300">
+        {/* Header - Black background with Gold gradient border */}
+        <div className="bg-gradient-to-r from-amber-500 to-yellow-600 text-black p-6 flex justify-between items-center rounded-t-2xl">
           <div>
             <h2 className="font-bold text-xl">Sign In Required</h2>
-            <p className="text-xs text-accent-foreground/70 mt-1">Access exclusive features</p>
+            <p className="text-xs text-black/70 mt-1">Access exclusive features</p>
           </div>
           <button
             onClick={onClose}
-            className="hover:bg-white/20 p-2 rounded-lg transition-colors"
+            className="hover:bg-black/20 p-2 rounded-lg transition-colors text-black"
             aria-label="Close"
           >
             <X size={20} />
@@ -74,28 +74,28 @@ const AuthPopupModal: React.FC<AuthPopupModalProps> = ({
 
         {/* Content */}
         <div className="p-6 space-y-4">
-          <p className="text-foreground text-sm leading-relaxed">
+          <p className="text-white text-sm leading-relaxed">
             {message}
           </p>
 
-          {/* Features List */}
-          <div className="bg-muted/50 rounded-lg p-4 space-y-2 border border-border/30">
-            <p className="text-xs font-semibold text-muted-foreground mb-3">Sign in to:</p>
-            <div className="space-y-2 text-xs text-muted-foreground">
+          {/* Features List - Dark background with gold accents */}
+          <div className="bg-gray-900 rounded-lg p-4 space-y-2 border border-amber-500/20">
+            <p className="text-xs font-semibold text-amber-400 mb-3">Sign in to:</p>
+            <div className="space-y-2 text-xs text-gray-300">
               <div className="flex items-center gap-2">
-                <span className="text-accent">✓</span>
+                <span className="text-amber-500 font-bold">✓</span>
                 <span>Access personalized recommendations</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-accent">✓</span>
+                <span className="text-amber-500 font-bold">✓</span>
                 <span>Place service orders</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-accent">✓</span>
+                <span className="text-amber-500 font-bold">✓</span>
                 <span>Track your projects</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-accent">✓</span>
+                <span className="text-amber-500 font-bold">✓</span>
                 <span>Get exclusive offers</span>
               </div>
             </div>
@@ -105,20 +105,20 @@ const AuthPopupModal: React.FC<AuthPopupModalProps> = ({
           <div className="flex flex-col gap-3 pt-2">
             <button
               onClick={handleLogin}
-              className="w-full px-4 py-3 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-lg transition-all duration-200 hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
+              className="w-full px-4 py-3 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-black font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-amber-500/40 active:scale-95 flex items-center justify-center gap-2"
             >
               🔐 Sign In
             </button>
             <button
               onClick={handleRegister}
-              className="w-full px-4 py-3 bg-muted hover:bg-muted/80 text-foreground font-semibold rounded-lg transition-all duration-200 hover:shadow-lg border border-border/50 active:scale-95 flex items-center justify-center gap-2"
+              className="w-full px-4 py-3 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg border border-amber-500/40 hover:border-amber-500/60 active:scale-95 flex items-center justify-center gap-2"
             >
               ✨ Create Account
             </button>
           </div>
 
           {/* Footer Text */}
-          <p className="text-xs text-muted-foreground text-center pt-2">
+          <p className="text-xs text-gray-400 text-center pt-2">
             You can browse freely. Login needed for orders.
           </p>
         </div>
