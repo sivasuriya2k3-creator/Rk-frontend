@@ -121,7 +121,8 @@ const AllServicesPage = () => {
 
   const handleOrderService = (serviceTitle: string) => {
     if (!isAuthenticated) {
-      navigate('/login');
+      const { showAuthPopup } = require('@/lib/authPopup');
+      showAuthPopup();
       return;
     }
     navigate(`/services/order/${encodeURIComponent(serviceTitle)}`);

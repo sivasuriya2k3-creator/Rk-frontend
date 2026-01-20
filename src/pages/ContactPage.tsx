@@ -67,12 +67,8 @@ export default function ContactPage() {
 
     // Check if user is logged in
     if (!user) {
-      toast({
-        title: 'Login Required',
-        description: 'Please log in to send a message.',
-        variant: 'destructive',
-      });
-      navigate('/login');
+      const { showAuthPopup } = require('@/lib/authPopup');
+      showAuthPopup();
       return;
     }
 

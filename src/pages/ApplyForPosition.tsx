@@ -52,15 +52,11 @@ const ApplyForPosition = () => {
     coverLetter: '',
     expectedSalary: '',
   });
-
   const experiences = ['0-1 years', '1-3 years', '3-5 years', '5-10 years', '10+ years'];
 
-  useEffect(() => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
+  // Removed login redirect - show popup on form submit if not authenticated
 
+  useEffect(() => {
     // In a real app, fetch the position details from API
     // For now, using mock data
     const loadPosition = async () => {

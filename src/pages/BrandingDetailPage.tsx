@@ -70,12 +70,8 @@ const BrandingDetailPage = () => {
 
   const handleLikeToggle = async () => {
     if (!user) {
-      toast({
-        variant: "destructive",
-        title: "Authentication Required",
-        description: "Please login to like items",
-      });
-      navigate('/login');
+      const { showAuthPopup } = require('@/lib/authPopup');
+      showAuthPopup();
       return;
     }
 

@@ -50,11 +50,7 @@ const ApplyForEmployee = () => {
   const experiences = ['0-1 years', '1-3 years', '3-5 years', '5-10 years', '10+ years'];
   const workPreferences = ['Full-time', 'Part-time', 'Contract', 'Remote', 'On-site', 'Hybrid'];
 
-  useEffect(() => {
-    if (!user) {
-      navigate('/login');
-    }
-  }, [user, navigate]);
+  // Removed login redirect - show popup on form submit if not authenticated
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

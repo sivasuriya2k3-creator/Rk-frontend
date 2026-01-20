@@ -72,12 +72,9 @@ export default function EmployeeDetailsPage() {
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
+  // Removed login redirect - show popup on action if not authenticated
 
+  useEffect(() => {
     const loadEmployee = async () => {
       try {
         if (!id) throw new Error('Employee ID not provided');
