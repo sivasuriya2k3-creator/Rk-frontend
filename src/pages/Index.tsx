@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import Navbar from "@/components/Navbar";
 import GradientBlinds from "@/components/GradientBlinds.tsx";
@@ -10,21 +9,15 @@ import Portfolio from "@/components/Portfolio";
 import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import { startAuthPopupAutoShow } from "@/lib/authPopup";
 
 const Index = () => {
-  const navigate = useNavigate();
   const { user } = useAuth();
 
+  // Initialize auth popup on home page
   useEffect(() => {
-    if (!user) {
-      navigate('/login');
-    }
-  }, [user, navigate]);
-
-  // Don't render anything until we verify authentication
-  if (!user) {
-    return null;
-  }
+    startAuthPopupAutoShow();
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
