@@ -1,21 +1,55 @@
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense, Component, ReactNode, ErrorInfo } from "react";
+import LiquidEther from "./LiquidEther";
 
-// Error boundary wrapper component
-const ErrorBoundaryWrapper = ({ children, onError }: { children: React.ReactNode; onError: () => void }) => {
-  useEffect(() => {
-    const handleError = () => {
-      console.error('LiquidEther component error detected');
-      onError();
-    };
-    
-    window.addEventListener('error', handleError);
-    return () => window.removeEventListener('error', handleError);
-  }, [onError]);
+// Error fallback component
+const LiquidEtherFallback = () => (
+  <div className="absolute inset-0 z-0 bg-gradient-to-br from-black via-amber-900/10 to-black" />
+);
 
-  return <>{children}</>;
-};
+// Simple Error Boundary Component
+class ErrorBoundary extends Component<
+  { children: ReactNode; onError?: (error: Error) => void },
+  { hasError: boolean }
+> {
+  constructor(props: { children: ReactNode; onError?: (error: Error) => void }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('LiquidEther error:', error, errorInfo);
+    if (this.props.onError) {
+      this.props.onError(error);
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <LiquidEtherFallback />;
+    }
+
+    return this.props.children;
+  }
+}
+
+// Error boundary wrapper
+const ErrorBoundaryWrapper = ({ 
+  children, 
+  onError 
+}: { 
+  children: ReactNode; 
+  onError?: (error: Error) => void;
+}) => (
+  <ErrorBoundary onError={onError}>
+    {children}
+  </ErrorBoundary>
+);
 
 const Hero = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -35,8 +69,17 @@ const Hero = () => {
       id="home"
       className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20"
     >
-      {/* LiquidEther Background - Disabled for stability */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-br from-black via-amber-900/10 to-black" />
+      {/* LiquidEther Background with Error Boundary */}
+      <ErrorBoundaryWrapper>
+        <Suspense fallback={<LiquidEtherFallback />}>
+          <div className="absolute inset-0 z-0">
+            <LiquidEther />
+          </div>
+        </Suspense>
+      </ErrorBoundaryWrapper>
+
+      {/* Fallback gradient if LiquidEther fails */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-br from-black via-amber-900/10 to-black opacity-0 hover:opacity-100 transition-opacity" />
 
       {/* Background Overlay - Semi-transparent for content readability */}
       <div className="absolute inset-0 z-1 bg-gradient-to-b from-black/40 via-black/20 to-black/40 pointer-events-none" />
