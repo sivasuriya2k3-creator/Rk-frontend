@@ -16,31 +16,40 @@ const AuthPopupModal: React.FC<AuthPopupModalProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  // Close if user is already logged in
+  // Check if user is logged in and close popup if they are
   useEffect(() => {
-    if (isUserLoggedIn()) {
+    if (isOpen && isUserLoggedIn()) {
+      console.log('User already logged in, closing popup');
       onClose();
     }
-  }, [onClose]);
+  }, [isOpen, onClose]);
+
+  // Add keyboard listener for Escape key
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleEscapeKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleEscapeKey);
+    return () => window.removeEventListener('keydown', handleEscapeKey);
+  }, [isOpen, onClose]);
 
   const handleLogin = useCallback(() => {
     onClose();
-    navigate('/login');
+    setTimeout(() => navigate('/login'), 100);
   }, [navigate, onClose]);
 
   const handleRegister = useCallback(() => {
     onClose();
-    navigate('/register');
+    setTimeout(() => navigate('/register'), 100);
   }, [navigate, onClose]);
 
   const handleOverlayClick = useCallback((e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
-      onClose();
-    }
-  }, [onClose]);
-
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
       onClose();
     }
   }, [onClose]);
@@ -53,7 +62,6 @@ const AuthPopupModal: React.FC<AuthPopupModalProps> = ({
     <div
       className="fixed inset-0 bg-black/50 z-[9998] flex items-center justify-center p-4"
       onClick={handleOverlayClick}
-      onKeyDown={handleKeyDown}
       role="presentation"
     >
       <div className="bg-black rounded-2xl shadow-2xl max-w-sm w-full border border-amber-500/30 backdrop-blur-sm animate-in fade-in zoom-in-95 duration-300">

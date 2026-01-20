@@ -56,12 +56,17 @@ const AppContent = () => {
 
   useEffect(() => {
     // Listen for auth popup events
-    const handleShowAuthPopup = () => {
+    const handleShowAuthPopup = (event: any) => {
+      console.log('Auth popup event received:', event);
       setAuthPopupOpen(true);
     };
 
-    window.addEventListener('showAuthPopup', handleShowAuthPopup);
-    return () => window.removeEventListener('showAuthPopup', handleShowAuthPopup);
+    // Use 'showAuthPopup' as custom event name
+    window.addEventListener('showAuthPopup', handleShowAuthPopup as EventListener);
+    
+    return () => {
+      window.removeEventListener('showAuthPopup', handleShowAuthPopup as EventListener);
+    };
   }, []);
 
   return (
