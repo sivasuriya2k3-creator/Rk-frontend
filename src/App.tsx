@@ -11,7 +11,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import { useState, useEffect } from "react";
+import ChatBot from "./components/ChatBot";
+import { useState, useEffect, Suspense, lazy } from "react";
 
 // Lazy load other pages to prevent loading all at once
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
@@ -37,8 +38,6 @@ const ApplyForEmployee = lazy(() => import("./pages/ApplyForEmployee"));
 const ApplyForPosition = lazy(() => import("./pages/ApplyForPosition"));
 const EmployeeDetailsPage = lazy(() => import("./pages/EmployeeDetailsPage"));
 const ChatbotDashboard = lazy(() => import("./pages/ChatbotDashboard"));
-import ChatBot from "./components/ChatBot";
-import { Suspense, lazy } from "react";
 
 const queryClient = new QueryClient();
 
