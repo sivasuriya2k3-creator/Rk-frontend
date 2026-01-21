@@ -31,11 +31,26 @@ export default defineConfig(({ mode }) => ({
             if (id.includes('react') || id.includes('@react')) {
               return 'vendor-react';
             }
+            if (id.includes('react-router')) {
+              return 'vendor-router';
+            }
             if (id.includes('radix-ui')) {
               return 'vendor-ui';
             }
-            if (id.includes('axios') || id.includes('sonner') || id.includes('date-fns')) {
-              return 'vendor-utils';
+            if (id.includes('@tanstack/react-query')) {
+              return 'vendor-query';
+            }
+            if (id.includes('axios')) {
+              return 'vendor-axios';
+            }
+            if (id.includes('sonner')) {
+              return 'vendor-sonner';
+            }
+            if (id.includes('date-fns')) {
+              return 'vendor-date';
+            }
+            if (id.includes('three')) {
+              return 'vendor-three';
             }
             return 'vendor-common';
           }
