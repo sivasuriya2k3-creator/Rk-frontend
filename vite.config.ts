@@ -23,6 +23,15 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
+    minify: 'terser',
+    sourcemap: false,
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+    reportCompressedSize: true,
     rollupOptions: {
       output: {
         manualChunks: {
@@ -59,7 +68,6 @@ export default defineConfig(({ mode }) => ({
           'vendor-query': ['@tanstack/react-query'],
           'vendor-axios': ['axios'],
           'vendor-sonner': ['sonner'],
-          'vendor-date': ['date-fns'],
           'vendor-three': ['three'],
           'vendor-forms': ['react-hook-form', '@hookform/resolvers'],
         },

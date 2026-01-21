@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import * as React from 'react';
 import { authService, User } from '@/lib/authService';
 
 interface AuthContextType {
@@ -14,10 +14,10 @@ interface AuthContextType {
   setAuthUser: (user: User) => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(() => {
+  const [user, setUser] = React.useState<User | null>(() => {
     // Initialize from localStorage immediately to prevent logout on reload
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
@@ -33,9 +33,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     return null;
   });
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = React.useState(true);
 
-  useEffect(() => {
+  React.useEffect(() => {
     // Check if user is already logged in
     if (authService.isAuthenticated()) {
       const currentUser = authService.getCurrentUser();
@@ -135,7 +135,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext);
+  const context = React.useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
