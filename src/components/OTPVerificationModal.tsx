@@ -28,7 +28,7 @@ export const OTPVerificationModal: React.FC<OTPVerificationModalProps> = ({
   const [canResend, setCanResend] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002/api';
+  const API_URL = import.meta.env.VITE_API_URL || 'https://rk-backend.vercel.app';
 
   // Send OTP when modal opens
   useEffect(() => {

@@ -9,9 +9,9 @@
  * const users = await fetchUsers();
  */
 
-// Get API URL from environment or use localhost as fallback
+// Get API URL from environment or use production Vercel URL as fallback
 const API_BASE_URL =
-  import.meta.env.VITE_API_URL || 'http://localhost:3001';
+  import.meta.env.VITE_API_URL || 'https://rk-backend.vercel.app';
 
 // Logger utility
 const log = {

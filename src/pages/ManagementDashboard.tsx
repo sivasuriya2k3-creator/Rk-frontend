@@ -1182,7 +1182,7 @@ export default function ManagementDashboard() {
                                               <Label className="text-muted-foreground">Profile Photo</Label>
                                               <div className="mt-2">
                                                 <img
-                                                  src={`http://localhost:5002${editingApplication.profilePhoto}`}
+                                                  src={`https://rk-backend.vercel.app${editingApplication.profilePhoto}`}
                                                   alt={`${editingApplication.name}'s profile`}
                                                   className="w-24 h-24 rounded-full object-cover border-2 border-border"
                                                   onError={(e) => {
@@ -1366,7 +1366,7 @@ export default function ManagementDashboard() {
                                               {newEmployeeData.avatar && (
                                                 <div className="flex justify-center mb-4">
                                                   <img
-                                                    src={`http://localhost:5002${newEmployeeData.avatar}`}
+                                                    src={`https://rk-backend.vercel.app${newEmployeeData.avatar}`}
                                                     alt={`${newEmployeeData.name}'s profile`}
                                                     className="w-20 h-20 rounded-full object-cover border-2 border-border"
                                                     onError={(e) => {

@@ -8,7 +8,7 @@ const getApiBaseUrl = () => {
     }
   }
   
-  return envApiUrl || 'http://localhost:5002/api';
+  return envApiUrl || 'https://rk-backend.vercel.app';
 };
 
 const API_BASE_URL = getApiBaseUrl();

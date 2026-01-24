@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { OTPVerificationModal } from '@/components/OTPVerificationModal';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://rk-backend.vercel.app';
 
 export function LoginWithOTP() {
   const [formData, setFormData] = useState({
