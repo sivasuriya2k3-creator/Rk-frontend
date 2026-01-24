@@ -1,6 +1,7 @@
 /**
- * RENDER BACKEND ENTRY POINT
- * Main Express server for Render deployment
+ * VERCEL BACKEND ENTRY POINT
+ * Main Express server for Vercel serverless deployment
+
  * 
  * Environment Variables:
  * - PORT: Server port (default: 10000)
@@ -89,7 +90,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// Health check for Render
+// Health check for Vercel
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
@@ -129,7 +130,7 @@ app.use((err, req, res, next) => {
 async function startServer() {
   try {
     // Log startup info
-    console.log('🚀 Starting Render Backend Server...');
+    console.log('🚀 Starting Vercel Backend Server...');
     console.log(`📍 Environment: ${NODE_ENV}`);
     console.log(`🔒 CORS Origin: ${CORS_ORIGIN}`);
 
