@@ -1,52 +1,27 @@
 {
   "version": 2,
-  "buildCommand": "npm install --prefix ./api",
-  "public": false,
-  "env": ["MONGODB_URI", "NODE_ENV"],
-  "functions": {
-    "api/**/*.js": {
-      "runtime": "nodejs20.x",
-      "memory": 1024,
-      "maxDuration": 60
-    }
+  "env": {
+    "MONGODB_URI": "@mongodb_uri",
+    "JWT_SECRET": "@jwt_secret",
+    "NODE_ENV": "production",
+    "CLIENT_URL": "@client_url"
   },
-  "rewrites": [
+  "buildCommand": "echo 'Backend API deployment'",
+  "builds": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/routes/$1.js"
+      "src": "server/index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/server/index.js"
     },
     {
-      "source": "/api",
-      "destination": "/api/routes/index.js"
+      "src": "/(.*)",
+      "dest": "/server/index.js"
     }
-  ],
-  "headers": [
-    {
-      "source": "/:path*",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600, s-maxage=3600"
-        },
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "SAMEORIGIN"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        }
-      ]
-    }
-  ],
-  "regions": ["iad1"]
+  ]
 }
 
