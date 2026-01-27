@@ -13,7 +13,13 @@
 
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { connectDB } from './lib/mongodb.js';
+
+// Get __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Import routes
 import indexRoute from './routes/index.js';
@@ -62,6 +68,33 @@ app.use((req, res, next) => {
 });
 
 // ============================================================
+// STATIC FILE SERVING (DIST FOLDER)
+// ============================================================
+
+// Serve static files from dist folder
+const distPath = path.join(__dirname, '../dist');
+app.use(express.static(distPath));
+
+// ============================================================
+// MIDDLEWARE TO ENSURE DB CONNECTION (BEFORE ROUTES)
+// ============================================================
+
+// Ensure database is connected before handling requests
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error('Database connection failed:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Database connection failed',
+      error: error.message,
+    });
+  }
+});
+
+// ============================================================
 // ROUTES
 // ============================================================
 
@@ -82,7 +115,7 @@ app.post('/api/orders/create', ordersCreateRoute);
 // Root endpoint
 app.get('/', (req, res) => {
   res.json({
-    message: 'Welcome to Render Backend',
+    message: 'Welcome to RajKayal Creative Hub API (Vercel)',
     status: 'running',
     environment: NODE_ENV,
     apiDocs: '/api',
@@ -97,19 +130,25 @@ app.get('/health', (req, res) => {
 
 // 404 handler
 app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'Endpoint not found',
-    path: req.path,
-    method: req.method,
-    availableEndpoints: [
-      'GET /api',
-      'GET /api/health',
-      'GET /api/users',
-      'POST /api/users/create',
-      'GET /api/orders',
-      'POST /api/orders/create',
-    ],
+  // Try to serve index.html for SPA routing
+  const indexPath = path.join(distPath, 'index.html');
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      res.status(404).json({
+        success: false,
+        message: 'Endpoint not found',
+        path: req.path,
+        method: req.method,
+        availableEndpoints: [
+          'GET /api',
+          'GET /api/health',
+          'GET /api/users',
+          'POST /api/users/create',
+          'GET /api/orders',
+          'POST /api/orders/create',
+        ],
+      });
+    }
   });
 });
 
@@ -124,37 +163,7 @@ app.use((err, req, res, next) => {
 });
 
 // ============================================================
-// START SERVER
+// EXPORT FOR VERCEL SERVERLESS
 // ============================================================
-
-async function startServer() {
-  try {
-    // Log startup info
-    console.log('🚀 Starting Vercel Backend Server...');
-    console.log(`📍 Environment: ${NODE_ENV}`);
-    console.log(`🔒 CORS Origin: ${CORS_ORIGIN}`);
-
-    // Connect to MongoDB
-    console.log('🔗 Connecting to MongoDB...');
-    await connectDB();
-    console.log('✅ MongoDB connected successfully');
-
-    // Start listening
-    app.listen(PORT, () => {
-      console.log(`✅ Server running on port ${PORT}`);
-      console.log(`📡 API URL: http://localhost:${PORT}/api`);
-      console.log(`💚 Health check: http://localhost:${PORT}/api/health`);
-      console.log(`\n✨ Server ready for requests!\n`);
-    });
-  } catch (error) {
-    console.error('❌ Failed to start server:', error.message);
-    process.exit(1);
-  }
-}
-
-// Only start server if not in test environment
-if (process.env.NODE_ENV !== 'test') {
-  startServer();
-}
 
 export default app;

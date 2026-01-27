@@ -75,4 +75,7 @@ api.interceptors.response.use(
   }
 );
 
+// Export both default and named export
+export { api as apiClient };
+export { API_BASE_URL };
 export default api;

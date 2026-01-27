@@ -34,8 +34,13 @@ export async function connectDB() {
     // Connect to MongoDB
     const connection = await mongoose.connect(mongodbUri, {
       // Options for connection
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 30000,  // Increased from 5s to 30s for cloud connections
       socketTimeoutMS: 45000,
+      maxPoolSize: 10,  // Connection pooling for serverless
+      minPoolSize: 2,   // Keep minimum connections alive
+      maxIdleTimeMS: 30000,  // Close idle connections after 30s
+      retryWrites: true,  // Retry writes on failure
+      w: 'majority',  // Wait for majority of replicas
     });
 
     cachedConnection = connection;
