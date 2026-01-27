@@ -176,6 +176,8 @@ NODE_ENV=development
 VITE_API_URL=http://localhost:3001
 ```
 
+
+
 ### Step 3: Run (1 minute)
 ```bash
 cd api
