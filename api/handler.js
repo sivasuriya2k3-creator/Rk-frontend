@@ -81,9 +81,8 @@ app.use(
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-// Static files
+// Static files - only uploads directory (Vercel handles dist)
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
-app.use(express.static(path.join(__dirname, '../dist')));
 
 // MongoDB connection on first request
 let mongoInitialized = false;
