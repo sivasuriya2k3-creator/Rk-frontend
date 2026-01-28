@@ -2,15 +2,10 @@
   "version": 2,
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "functions": {
-    "server/index.js": {
-      "runtime": "nodejs18.x@3"
-    }
-  },
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/server/index.js"
+      "dest": "/api/handler.js"
     },
     {
       "handle": "filesystem"
