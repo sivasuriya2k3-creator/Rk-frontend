@@ -35,15 +35,45 @@ const app = express();
 
 // MongoDB
 const MONGODB_URI = process.env.MONGODB_URI;
-mongoose
-  .connect(MONGODB_URI)
-  .then(() => console.log('✓ MongoDB connected'))
-  .catch(err => console.error('✗ MongoDB error:', err));
+let mongoConnection = null;
+
+const connectMongo = async () => {
+  if (mongoConnection && mongoose.connection.readyState === 1) {
+    return mongoConnection;
+  }
+  try {
+    await mongoose.connect(MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
+    mongoConnection = mongoose.connection;
+    console.log('✓ MongoDB connected');
+    return mongoConnection;
+  } catch (err) {
+    console.error('✗ MongoDB error:', err);
+    throw err;
+  }
+};
+
+// Connect on first request for serverless
+let mongoInitialized = false;
+app.use(async (req, res, next) => {
+  if (!mongoInitialized && MONGODB_URI) {
+    try {
+      await connectMongo();
+      mongoInitialized = true;
+    } catch (err) {
+      console.error('MongoDB connection failed:', err);
+    }
+  }
+  next();
+});
 
 // CORS
 const allowedOrigins = [
   'http://localhost:5173',
-  process.env.CLIENT_URL
+  process.env.CLIENT_URL,
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null
 ].filter(Boolean);
 
 app.use(
