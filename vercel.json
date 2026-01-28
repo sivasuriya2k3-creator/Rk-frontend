@@ -1,6 +1,9 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
+  "env": {
+    "DEPLOYMENT_TIMESTAMP": "@2026-01-28"
+  },
   "routes": [
     {
       "src": "^/api(/.*)?$",
