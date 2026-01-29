@@ -82,8 +82,10 @@ app.use(async (req, res, next) => {
 // CORS
 const allowedOrigins = [
   'http://localhost:5173',
+  'http://localhost:5002',
   process.env.CLIENT_URL,
-  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
+  'https://rk-website-frontend.onrender.com' // Render frontend
 ].filter(Boolean);
 
 app.use(
@@ -146,9 +148,22 @@ export default app;
 // Start server (Render or local)
 const PORT = process.env.PORT || 5002;
 const server = app.listen(PORT, '0.0.0.0', () => {
-  console.log(`\n✓ Server running on port ${PORT}`);
-  console.log(`✓ API: http://localhost:${PORT}/api`);
-  if (process.env.MONGODB_URI) {
-    connectMongo().then(() => console.log('✓ MongoDB connected')).catch(err => console.error('✗ MongoDB error:', err));
+  console.log(`\n✓ Server listening on port ${PORT}`);
+  console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
+  if (MONGODB_URI) {
+    connectMongo()
+      .then(() => console.log('✓ MongoDB connected'))
+      .catch(err => console.warn('⚠ MongoDB connection failed:', err.message));
+  } else {
+    console.warn('⚠ MONGODB_URI not set - running in read-only mode');
   }
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully...');
+  server.close(() => {
+    console.log('Server closed');
+    process.exit(0);
+  });
 });
