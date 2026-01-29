@@ -16,7 +16,7 @@ const getApiBaseUrl = () => {
   }
 
   // Production: use backend URL (should be set via .env.production)
-  return 'https://rk-backend.vercel.app/api';
+  return 'https://rk-ras3.onrender.com/api';
 };
 
 const API_BASE_URL = getApiBaseUrl();
