@@ -143,11 +143,11 @@ app.get('*', (req, res) => {
 // ✅ REQUIRED FOR VERCEL
 export default app;
 
-// Start server on Render (not on Vercel)
+// Start server (Render or local)
 const PORT = process.env.PORT || 5002;
 if (!process.env.VERCEL) {
   const server = app.listen(PORT, '0.0.0.0', () => {
-    console.log(`\n✓ Server running on http://0.0.0.0:${PORT}`);
+    console.log(`\n✓ Server running on port ${PORT}`);
     console.log(`✓ API: http://localhost:${PORT}/api`);
     if (MONGODB_URI) {
       connectMongo().then(() => console.log('✓ MongoDB connected')).catch(err => console.error('✗ MongoDB error:', err));

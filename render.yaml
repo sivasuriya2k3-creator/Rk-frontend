@@ -1,14 +1,55 @@
 services:
+  # =========================
+  # BACKEND – EXPRESS API
+  # =========================
   - type: web
     name: rk-website-backend
     env: node
     plan: free
-    buildCommand: npm ci && npm run build
+
+    rootDir: .
+
+    buildCommand: npm ci
     startCommand: node server/index.js
+
     envVars:
       - key: NODE_ENV
         value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: APPLE_CLIENT_ID
+        sync: false
+      - key: APPLE_TEAM_ID
+        sync: false
+      - key: APPLE_KEY_ID
+        sync: false
+      - key: APPLE_KEY
+        sync: false
+
+  # =========================
+  # FRONTEND – VITE + REACT
+  # =========================
+  - type: static
+    name: rk-website-frontend
+    plan: free
+
+    rootDir: .
+
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+
+    envVars:
+      - key: NODE_ENV
+        value: development
       - key: VITE_API_URL
-        value: https://rk-ras3.onrender.com
-      - key: PORT
-        value: 10000
+        value: https://rk-website-backend.onrender.com
