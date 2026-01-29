@@ -5,10 +5,24 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
 
+// Load env first
+dotenv.config();
+
 // Ensure environment is set
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = 'development';
 }
+
+// Catch any top-level errors
+process.on('uncaughtException', (err) => {
+  console.error('❌ Uncaught Exception:', err);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
 
 import authRoutes from './routes/auth.js';
 import portfolioRoutes from './routes/portfolio.js';
@@ -145,25 +159,40 @@ app.get('*', (req, res) => {
 // ✅ REQUIRED FOR VERCEL
 export default app;
 
-// Start server (Render or local)
+// ===================================
+// START SERVER – RENDER COMPATIBLE
+// ===================================
 const PORT = process.env.PORT || 5002;
+
+console.log(`\n📌 Starting server on 0.0.0.0:${PORT}...`);
+console.log(`📌 Environment: ${process.env.NODE_ENV}`);
+
 const server = app.listen(PORT, '0.0.0.0', () => {
-  console.log(`\n✓ Server listening on port ${PORT}`);
-  console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`\n✅ Server is listening on port ${PORT}`);
+  console.log(`✅ Ready to accept connections`);
+  
+  // Try to connect MongoDB in background (don't block startup)
   if (MONGODB_URI) {
     connectMongo()
-      .then(() => console.log('✓ MongoDB connected'))
-      .catch(err => console.warn('⚠ MongoDB connection failed:', err.message));
-  } else {
-    console.warn('⚠ MONGODB_URI not set - running in read-only mode');
+      .then(() => console.log('✅ MongoDB connected'))
+      .catch(err => console.warn('⚠️  MongoDB not available:', err.message));
   }
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`❌ Port ${PORT} is already in use`);
+  } else {
+    console.error('❌ Server error:', err);
+  }
+  process.exit(1);
 });
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
-  console.log('SIGTERM received, shutting down gracefully...');
+  console.log('📌 SIGTERM received, shutting down...');
   server.close(() => {
-    console.log('Server closed');
+    console.log('✅ Server closed gracefully');
     process.exit(0);
   });
 });
