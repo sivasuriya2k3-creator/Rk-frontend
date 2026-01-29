@@ -1,6 +1,9 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "devCommand": "npm run dev",
   "functions": {
     "api/server.js": {
       "runtime": "nodejs20.x",

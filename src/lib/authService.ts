@@ -1,5 +1,7 @@
 import api from './api';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002';
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -195,3 +197,17 @@ export const authService = {
     return !!localStorage.getItem('token');
   },
 };
+
+export const login = async (email: string, password: string) => {
+  try {
+    const response = await fetch(`${API_URL}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    })
+    return await response.json()
+  } catch (error) {
+    console.error('Login error:', error)
+    throw error
+  }
+}
