@@ -7,10 +7,10 @@ services:
     env: node
     plan: free
 
-    rootDir: .
+    rootDir: server
 
     buildCommand: npm ci
-    startCommand: node server/boot.js
+    startCommand: node boot.js
 
     envVars:
       - key: NODE_ENV
