@@ -9,8 +9,13 @@ const __dirname = path.dirname(__filename);
 
 // Load .env from parent directory
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
+dotenv.config({ path: path.join(__dirname, '..', '.env.prod') });
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/rkch-hub';
+const MONGODB_URI = process.env.MONGODB_URI;
+if (!MONGODB_URI) {
+  console.error('❌ MONGODB_URI environment variable is not set');
+  process.exit(1);
+}
 
 // Admin user details
 const ADMIN_EMAIL = 'rajkayal7281@gmail.com';

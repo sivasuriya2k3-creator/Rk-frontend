@@ -5,7 +5,11 @@ import path from "path";
 import { fileURLToPath } from "url";
 import mongoose from "mongoose";
 
-dotenv.config();
+// Load environment variables
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
+dotenv.config({ path: path.join(__dirname, '..', '.env.prod') });
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -59,6 +63,7 @@ server.on("error", (err) => {
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (MONGODB_URI) {
+  console.log("🔗 Attempting MongoDB connection...");
   mongoose
     .connect(MONGODB_URI, {
       serverSelectionTimeoutMS: 10000,
@@ -66,8 +71,16 @@ if (MONGODB_URI) {
       maxPoolSize: 5,
       minPoolSize: 1
     })
-    .then(() => console.log("✅ MongoDB connected"))
-    .catch((err) => console.warn("⚠️  MongoDB connection failed:", err.message));
+    .then(() => {
+      console.log("✅ MongoDB connected successfully");
+      console.log("📊 Database: RK-WEBSITEDB (MongoDB Atlas)");
+    })
+    .catch((err) => {
+      console.error("❌ MongoDB connection error:", err.message);
+      console.error("🔧 Make sure MONGODB_URI environment variable is set correctly");
+      console.error("🔧 Format should be: mongodb+srv://username:password@cluster.mongodb.net/database");
+    });
 } else {
-  console.warn("⚠️  MONGODB_URI not set - skipping DB connection");
+  console.error("❌ MONGODB_URI environment variable not set!");
+  console.error("🔧 Please set MONGODB_URI in your environment variables");
 }
