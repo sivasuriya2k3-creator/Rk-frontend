@@ -12,8 +12,6 @@ dotenv.config({ path: path.join(__dirname, '..', '.env') });
 dotenv.config({ path: path.join(__dirname, '..', '.env.prod') });
 
 const app = express();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Setup middleware
 app.use(express.json());
@@ -36,13 +34,28 @@ app.use(
   })
 );
 
-// Health check
+// Health check route
 app.get("/api/health", (req, res) => {
-  res.json({ status: "OK", message: "Server running" });
+  res.json({ status: "OK", message: "Server running", timestamp: new Date() });
 });
 
-// Start server
+// 404 fallback
+app.use((req, res) => {
+  res.status(404).json({ error: "Route not found" });
+});
+
+// Error handler
+app.use((err, req, res, next) => {
+  console.error("Express error:", err);
+  res.status(500).json({ error: "Internal server error" });
+});
+
+// Start server on 0.0.0.0
 const PORT = process.env.PORT || 5002;
+
+console.log(`\n📍 Starting server on port ${PORT}...`);
+console.log(`📍 NODE_ENV: ${process.env.NODE_ENV || 'development'}`);
+console.log(`📍 Binding to: 0.0.0.0:${PORT}\n`);
 
 const server = app.listen(PORT, "0.0.0.0", () => {
   console.log(`\n✅ SERVER LISTENING ON PORT ${PORT}`);
@@ -59,11 +72,11 @@ server.on("error", (err) => {
   process.exit(1);
 });
 
-// Setup database
+// Setup database connection (non-blocking)
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (MONGODB_URI) {
-  console.log("🔗 Attempting MongoDB connection...");
+  console.log("🔗 Connecting to MongoDB...");
   mongoose
     .connect(MONGODB_URI, {
       serverSelectionTimeoutMS: 10000,
@@ -77,10 +90,10 @@ if (MONGODB_URI) {
     })
     .catch((err) => {
       console.error("❌ MongoDB connection error:", err.message);
-      console.error("🔧 Make sure MONGODB_URI environment variable is set correctly");
-      console.error("🔧 Format should be: mongodb+srv://username:password@cluster.mongodb.net/database");
+      console.warn("⚠️  Server is running but database is unavailable");
+      console.warn("🔧 Check MONGODB_URI: mongodb+srv://username:password@cluster.mongodb.net/database");
     });
 } else {
-  console.error("❌ MONGODB_URI environment variable not set!");
-  console.error("🔧 Please set MONGODB_URI in your environment variables");
+  console.warn("⚠️  MONGODB_URI environment variable not set");
+  console.warn("🔧 Server is running but database operations will fail");
 }
