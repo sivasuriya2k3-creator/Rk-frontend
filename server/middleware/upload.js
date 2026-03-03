@@ -6,15 +6,29 @@ import fs from 'fs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Ensure uploads directory exists
-const uploadDir = path.join(__dirname, '../../public/uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+// Upload directory - use /tmp for serverless environments
+const isServerless = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
+const uploadDir = isServerless 
+  ? '/tmp/uploads' 
+  : path.join(__dirname, '../../public/uploads');
+
+// Ensure uploads directory exists (lazy initialization)
+let dirInitialized = false;
+const ensureUploadDir = () => {
+  if (!dirInitialized && !fs.existsSync(uploadDir)) {
+    try {
+      fs.mkdirSync(uploadDir, { recursive: true });
+      dirInitialized = true;
+    } catch (err) {
+      console.warn('Could not create upload directory:', err.message);
+    }
+  }
+};
 
 // Configure storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    ensureUploadDir();
     cb(null, uploadDir);
   },
   filename: function (req, file, cb) {

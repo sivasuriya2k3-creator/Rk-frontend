@@ -1,19 +1,28 @@
 {
-  "name": "rk-website-backend",
+  "name": "server",
   "version": "1.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
-    "start": "node boot.js"
+    "dev": "NODE_ENV=development MODE=api nodemon index.js",
+    "start": "NODE_ENV=production MODE=api node index.js",
+    "start:full": "NODE_ENV=production MODE=full node index.js"
   },
   "dependencies": {
-    "express": "^4.21.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
-    "mongoose": "^8.0.0",
-    "jsonwebtoken": "^9.1.0",
+    "apple-signin-auth": "^1.7.9",
     "bcryptjs": "^2.4.3",
-    "nodemailer": "^6.9.3",
-    "multer": "^1.4.5-lts.1",
-    "sharp": "^0.32.6"
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "google-auth-library": "^9.15.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.3",
+    "multer": "^2.0.2",
+    "node-fetch": "^2.7.0",
+    "nodemailer": "^6.10.1",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
   }
 }

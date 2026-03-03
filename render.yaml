@@ -1,20 +1,44 @@
+# ============================================
+# RENDER DEPLOYMENT CONFIGURATION
+# ============================================
+#
+# Two deployment options:
+#
+# 1. API Only (api.rkch.tech):
+#    - Set MODE=api in environment
+#    - Serves API endpoints only
+#    - Frontend deployed separately on Vercel
+#
+# 2. Full Stack (single domain):
+#    - Set MODE=full in environment
+#    - Serves both API and frontend
+#    - No separate frontend deployment needed
+#
+# ============================================
+
 services:
   # =========================
-  # BACKEND – EXPRESS API
+  # API ONLY (api.rkch.tech)
   # =========================
   - type: web
-    name: rk-website-backend
+    name: rk-api
     env: node
     plan: free
-
-    rootDir: server
-
+    region: oregon
+    
     buildCommand: npm ci
-    startCommand: node boot.js
-
+    startCommand: npm run server:api
+    
+    domains:
+      - api.rkch.tech
+    
     envVars:
+      - key: MODE
+        value: api
       - key: NODE_ENV
         value: production
+      - key: CLIENT_URLS
+        value: https://rkch.tech,https://www.rkch.tech,https://preprod.rkch.tech,https://rk-website-navy.vercel.app
       - key: MONGODB_URI
         sync: false
       - key: JWT_SECRET
@@ -37,19 +61,26 @@ services:
         sync: false
 
   # =========================
-  # FRONTEND – VITE + REACT
+  # FULL STACK (optional)
   # =========================
-  - type: static
-    name: rk-website-frontend
-    plan: free
-
-    rootDir: .
-
-    buildCommand: npm ci && npm run build
-    staticPublishPath: dist
-
-    envVars:
-      - key: NODE_ENV
-        value: development
-      - key: VITE_API_URL
-        value: https://rk-website-backend.onrender.com
+  # Uncomment to use single server deployment
+  #
+  # - type: web
+  #   name: rk-website
+  #   env: node
+  #   plan: free
+  #   
+  #   buildCommand: npm ci && npm run build
+  #   startCommand: npm run server:full
+  #   
+  #   envVars:
+  #     - key: MODE
+  #       value: full
+  #     - key: NODE_ENV
+  #       value: production
+  #     - key: CLIENT_URLS
+  #       value: https://yourdomain.com
+  #     - key: MONGODB_URI
+  #       sync: false
+  #     - key: JWT_SECRET
+  #       sync: false
